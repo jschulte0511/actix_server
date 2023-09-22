@@ -1,5 +1,5 @@
 use actix_cors::Cors;
-use actix_web::{get, middleware::Logger, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, http, middleware::Logger, App, HttpResponse, HttpServer, Responder};
 use serde::{Deserialize, Serialize};
 
 mod handler;
@@ -32,19 +32,21 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(|| {
         let cors = Cors::default()
-            //.allowed_origin("http://localhost:8080") // Need env variable
+            .allow_any_origin()
             .allowed_methods(vec!["GET", "POST"])
-            // .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
-            // .allowed_header(http::header::CONTENT_TYPE)
+            //.allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
+            //.allowed_header(http::header::CONTENT_TYPE)
+            .allow_any_header()
             .max_age(3600);
 
         App::new()
-            .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(cors)
+            .wrap(Logger::new("%a %{User-Agent}i"))
             .service(hello)
             .service(get_linked_list)
     })
-    .bind(("0.0.0.0", 8000))? //Env variable
+    //.bind(("0.0.0.0", 8000))? //Env variable
+    .bind(("127.0.0.1", 8000))? //Env variable
     .run()
     .await
 }
