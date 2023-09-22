@@ -45,8 +45,8 @@ async fn main() -> std::io::Result<()> {
             .service(hello)
             .service(get_linked_list)
     })
-    //.bind(("0.0.0.0", 8000))? //Env variable
-    .bind(("127.0.0.1", 8000))? //Env variable
+    .bind(("0.0.0.0", 8000))? //Env variable
+    //.bind(("127.0.0.1", 8000))? //Env variable
     .run()
     .await
 }
